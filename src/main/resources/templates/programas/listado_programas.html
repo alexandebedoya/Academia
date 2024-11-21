@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${titulo}"></h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <a th:href="@{/programas/form}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Nuevo Programa
+                    </a>
+                </div>
+
+                <table class="table table-striped" th:if="${not #lists.isEmpty(programas)}">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre del Programa</th>
+                            <th>Facultad</th>
+                            <th>Título Otorgado</th>
+                            <th>Duración</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="programa : ${programas}">
+                            <td th:text="${programa.id}"></td>
+                            <td th:text="${programa.nombrePrograma}"></td>
+                            <td th:text="${programa.facultad}"></td>
+                            <td th:text="${programa.tituloOtorgado}"></td>
+                            <td th:text="${programa.duracion}"></td>
+                            <td>
+                                <a th:href="@{/programas/consultar/} + ${programa.id}" class="btn btn-info btn-sm">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a th:href="@{/programas/form/} + ${programa.id}" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a th:href="@{/programas/eliminar/} + ${programa.id}" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Estás seguro de eliminar este programa?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="alert alert-info" th:if="${#lists.isEmpty(programas)}">
+                    No hay programas registrados aún
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+
+</html>

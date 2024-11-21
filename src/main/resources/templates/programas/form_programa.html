@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+    
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${titulo}"></h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/programas/form}" th:object="${programaAcademico}" method="post">
+                    <div class="mb-3">
+                        <label for="nombrePrograma" class="form-label">Nombre del Programa</label>
+                        <!-- <input type="text" id="nombrePrograma" class="form-control" th:field="*{nombrePrograma}" > -->
+                        <input type="text" class="form-control" th:field="*{nombrePrograma}" >
+                        <div class="text-danger" th:if="${#fields.hasErrors('nombrePrograma')}" th:errors="*{nombrePrograma}"></div>
+                                                                                    
+                    </div>
+                    <div class="mb-3">
+                        <label for="facultad" class="form-label">Facultad</label>
+                        <!-- <input type="text" id="facultad" class="form-control" th:field="*{facultad}" > -->
+                        <input type="text" class="form-control" th:field="*{facultad}" >
+                        <div class="text-danger" th:if="${#fields.hasErrors('facultad')}" th:errors="*{facultad}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tituloOtorgado" class="form-label">Título Otorgado</label>
+                        <!-- <input type="text" id="tituloOtorgado" class="form-control" th:field="*{tituloOtorgado}" > -->
+                        <input type="text" class="form-control" th:field="*{tituloOtorgado}">
+                        <div class="text-danger" th:if="${#fields.hasErrors('tituloOtorgado')}" th:errors="*{tituloOtorgado}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="duracion" class="form-label">Duración (en semestres)</label>
+                        <!-- <input type="number" id="duracion" class="form-control" th:field="*{duracion}" min="1" > -->
+                        <input type="number" class="form-control" th:field="*{duracion}">
+                        <div class="text-danger" th:if="${#fields.hasErrors('duracion')}" th:errors="*{duracion}"></div>
+                    </div>
+                    <input type="hidden" th:field="*{id}">
+                    <button type="submit" class="btn btn-primary" th:text="${boton}">Guardar</button>
+                    <a th:href="@{/programas/listar}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+</html>

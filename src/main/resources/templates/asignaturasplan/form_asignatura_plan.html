@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${titulo}"></h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/asignaturasplan/form}" th:object="${asignaturaPlan}" method="post">
+                    <!-- Plan de Estudio -->
+                    <div class="mb-3">
+                        <label for="plan" class="form-label">Plan de Estudio</label>
+                        <select th:field="*{plan}" class="form-control" required>
+                            <option value="">Seleccionar Plan de Estudio</option>
+                            <option th:each="plan : ${plan}" th:value="${plan.id}" th:text="${plan.descripcion}">
+                            </option>
+                        </select>
+                        <div class="text-danger" th:if="${#fields.hasErrors('plan')}" th:errors="*{plan}"></div>
+                    </div>
+
+                    <!-- Semestre -->
+                    <div class="mb-3">
+                        <label for="semestreNivel" class="form-label">Semestre/Nivel</label>
+                        <select th:field="*{semestreNivel}" class="form-control" required>
+                            <option value="">Seleccionar Semestre</option>
+                            <option th:each="semestre : ${#numbers.sequence(1, 10)}" th:value="${semestre}"
+                                th:text="${'Semestre ' + semestre}">
+                            </option>
+                        </select>
+                        <div class="text-danger" th:if="${#fields.hasErrors('semestreNivel')}"
+                            th:errors="*{semestreNivel}"></div>
+                    </div>
+
+                    <!-- Asignatura -->
+                    <div class="mb-3">
+                        <label for="asignatura" class="form-label">Asignatura</label>
+                        <select th:field="*{asignatura}" class="form-control" required>
+                            <option value="">Seleccionar Asignatura</option>
+                            <option th:each="asignatura : ${asignaturas}" th:value="${asignatura.id}"
+                                th:text="${asignatura.nombre + ' (' + asignatura.numeroCreditos + ' créditos)'}">
+                            </option>
+                        </select>
+                        <div class="text-danger" th:if="${#fields.hasErrors('asignatura')}" th:errors="*{asignatura}">
+                        </div>
+                    </div>
+
+                    <!-- Prerrequisito -->
+                    <div class="mb-3">
+                        <label for="prerrequisito" class="form-label">Prerrequisito</label>
+                        <select th:field="*{prerrequisito}" class="form-control">
+                            <option value="">Sin prerrequisito</option>
+                            <option th:each="ap : ${asignaturasDisponibles}" th:value="${ap.id}"
+                                th:text="${ap.asignatura.nombre + ' (Semestre ' + ap.semestreNivel + ')'}">
+                            </option>
+                        </select>
+                        <div class="text-danger" th:if="${#fields.hasErrors('prerrequisito')}"
+                            th:errors="*{prerrequisito}"></div>
+                    </div>
+
+                    <input type="hidden" th:field="*{id}">
+
+
+                    <input type="hidden" th:field="*{id}">
+                    <button type="submit" class="btn btn-primary" th:text="${boton}">Guardar</button>
+                    <a th:href="@{/asignaturasplan/listar}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+
+</html>

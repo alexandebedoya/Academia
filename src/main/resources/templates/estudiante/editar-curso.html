@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+
+    <div class="container mt-4">
+        <h1 class="text-secondary">Editar Curso</h1>
+
+        <form th:action="@{/estudiantes/cursos-matriculados/guardar}" th:object="${curso}" method="post">
+            <input type="hidden" th:field="*{id}" />
+            <div class="mb-3">
+                <label class="form-label">Asignatura:</label>
+                <input type="text" class="form-control" th:field="*{curso.asignatura.nombre}" readonly />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Estado:</label>
+                <input type="text" class="form-control" th:field="*{estadoCurso}" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nota Final:</label>
+                <input type="number" class="form-control" th:field="*{notaFinal}" step="0.1" />
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a th:href="@{/estudiantes/cursos-matriculados/{id}(id=${curso.estudiante.id})}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+</html>

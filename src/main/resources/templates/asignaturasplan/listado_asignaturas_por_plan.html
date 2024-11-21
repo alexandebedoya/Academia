@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{layout/layout :: head}">
+    <!-- Estilos de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilo personalizado -->
+    <style>
+        /* Estilo personalizado para el acordeón */
+        .accordion-button {
+            background-color: #007bff; /* Color de fondo azul */
+            color: white; /* Texto blanco */
+            border: none; /* Eliminar borde por defecto */
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #0056b3; /* Azul más oscuro cuando está expandido */
+            color: white; /* Mantener texto blanco */
+        }
+
+        .accordion-header {
+            border-bottom: 1px solid #007bff; /* Borde azul debajo del encabezado */
+        }
+
+        .accordion-body {
+            background-color: #f0f8ff; /* Fondo azul claro para el contenido del acordeón */
+        }
+
+        /* Estilo de los elementos de la lista */
+        .list-group-item {
+            background-color: #e9f7ff; /* Fondo azul claro para cada asignatura */
+            border-color: #007bff; /* Borde azul para los items de la lista */
+        }
+
+        .list-group-item:hover {
+            background-color: #d6ecf7; /* Fondo azul más oscuro al pasar el mouse */
+        }
+    </style>
+</head>
+
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+
+    <div class="container py-4">
+        <h1 th:text="${titulo}"></h1>
+
+        <!-- Acordeón para secciones verticales -->
+        <div class="accordion" id="accordionPlanes">
+            <!-- Iterar por cada plan de estudio -->
+            <div class="accordion-item" th:each="entry, iterStat : ${asignaturasPorPlan}">
+                <h2 class="accordion-header" th:attr="id='heading-' + ${iterStat.index}">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        th:attr="data-bs-target='#collapse-' + ${iterStat.index}"
+                        aria-expanded="false"
+                        th:attraria-controls="'collapse-' + ${iterStat.index}">
+                        <span th:text="${entry.key.descripcion}">Plan de Estudio</span>
+                    </button>
+                </h2>
+                <div class="accordion-collapse collapse"
+                    th:id="'collapse-' + ${iterStat.index}"
+                    th:attraria-labelledby="'heading-' + ${iterStat.index}"
+                    data-bs-parent="#accordionPlanes">
+                    <div class="accordion-body">
+                        <ul class="list-group">
+                            <!-- Listar asignaturas del plan -->
+                            <li class="list-group-item" th:each="asignaturaPlan : ${entry.value}">
+                                <strong th:text="${asignaturaPlan.asignatura.nombre}">Nombre de Asignatura</strong>
+                                <span class="text-muted" th:text="'(Semestre ' + ${asignaturaPlan.semestreNivel} + ')'"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+
+    <!-- Script de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

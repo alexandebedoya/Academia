@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+
+    <!-- Header (Barra de navegación) -->
+    <header th:replace="~{layout/layout :: header}"></header>
+
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${titulo}"></h3>
+            </div>
+            <div class="card-body">
+                <!-- Mostrar error si no hay cursos matriculados -->
+                <div th:if="${error}" class="alert alert-danger">
+                    <p th:text="${error}"></p>
+                </div>
+
+                <!-- Tabla de Cursos Matriculados -->
+                <div class="table-responsive">
+                    <table class="table table-striped" th:if="${not #lists.isEmpty(cursosMatriculados)}">
+                        <thead>
+                            <tr>
+                                <th>Curso</th>
+                                <th>Periodo</th>
+                                <th>Estado del Curso</th>
+                                <th>Nota Final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="cursoMatriculado : ${cursosMatriculados}">
+                                <td th:text="${cursoMatriculado.curso.nombre}"></td>
+                                <td th:text="${cursoMatriculado.periodo}"></td>
+                                <td th:text="${cursoMatriculado.estadoCurso}"></td>
+                                <td th:text="${cursoMatriculado.notaFinal}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Mensaje si no hay cursos matriculados -->
+                    <div class="alert alert-info" th:if="${#lists.isEmpty(cursosMatriculados)}">
+                        No hay cursos matriculados aún.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+
+</body>
+
+</html>

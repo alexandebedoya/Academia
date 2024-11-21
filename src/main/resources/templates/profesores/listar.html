@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${titulo}"></h3>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <a th:href="@{/profesores/form}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Nueva Profesor
+                    </a>
+                </div>
+
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Apellidos</th>
+                            <th>Departamento</th>
+                            <th>Especialización</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="profesor : ${profesores}">
+                            <td th:text="${profesor.id}"></td>
+                            <td th:text="${profesor.nombres}"></td>
+                            <td th:text="${profesor.apellidos}"></td>
+                            <td th:text="${profesor.departamento}"></td>
+                            <td th:text="${profesor.especializacion}"></td>
+                            <td>
+                                <a th:href="@{/profesores/consultar/} + ${profesor.id}" class="btn btn-info btn-sm">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a th:href="@{/profesores/form/} + ${profesor.id}" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a th:href="@{/profesores/eliminar/} + ${profesor.id}" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Estás seguro de eliminar este profesor?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div th:if="${profesores.isEmpty()}">
+                    <p>No hay profesores registrados.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+
+</body>
+
+</html>

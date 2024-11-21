@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+    
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${titulo}"></h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/planestudio/form}" th:object="${planEstudio}" method="post">
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <input type="text" class="form-control" th:field="*{descripcion}" >
+                        <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+                    </div>
+                                        
+                    <div class="mb-3">
+                        <label for="anioVigencia" class="form-label">Año de vigencia</label>
+                        <input type="number" class="form-control" th:field="*{anioVigencia}" >
+                        <div class="text-danger" th:if="${#fields.hasErrors('anioVigencia')}" th:errors="*{anioVigencia}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="programaAcademico" class="form-label">Programa Academico</label>
+                        <select th:field="*{programa}" class="form-control">
+                            <option value="" disabled selected>Seleccione un programa</option>
+                            <option th:each="programa : ${programaAcademico}" 
+                                    th:value="${programa.id}" 
+                                    th:text="${programa.nombrePrograma}"></option>
+                        </select>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('programa')}" th:errors="*{programa}"></small>
+                    </div>
+
+                    <!-- <div class="mb-3">
+                        <label for="asignatura" class="form-label">Asignatura</label>
+                        <select th:field="*{asignatura}" class="form-control">
+                            <option value="">Seleccionar...</option>
+                            <option th:each="asignatura : ${asignaturas}" 
+                                    th:value="${asignatura.id}" 
+                                    th:text="${asignatura.nombre}">
+                            </option>
+                        </select>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('asignatura')}" th:errors="*{asignatura}"></small>
+                    </div>
+                    -->
+                    <input type="hidden" th:field="*{id}">
+                    <button type="submit" class="btn btn-primary" th:text="${boton}">Guardar</button>
+                    <a th:href="@{/planestudio/listar}" class="btn btn-secondary">Cancelar</a> 
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+</html>

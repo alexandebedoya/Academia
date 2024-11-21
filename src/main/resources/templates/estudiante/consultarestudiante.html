@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+    <nav th:replace="layout/layout :: nav"></nav>
+    
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Cursos Matriculados - <span th:text="${estudiante.nombres + ' ' + estudiante.apellidos}"></span></h2>
+                <p>Periodo Actual: <strong th:text="${periodoActual}"></strong></p>
+                
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Asignatura</th>
+                            <th>Profesor</th>
+                            <th>Horario</th>
+                            <th>Aula</th>
+                            <th>Créditos</th>
+                            <th>Estado</th>
+                            <th>Nota Final</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="matricula : ${cursosMatriculados}">
+                            <td th:text="${matricula.curso.asignatura.nombre}"></td>
+                            <td th:text="${matricula.curso.profesor.nombres + ' ' + matricula.curso.profesor.apellidos}"></td>
+                            <td th:text="${matricula.curso.horario}"></td>
+                            <td th:text="${matricula.curso.aula}"></td>
+                            <td th:text="${matricula.curso.asignatura.numeroCreditos}"></td>
+                            <td>
+                                <span th:text="${matricula.estadoCurso}"
+                                      th:class="${matricula.estadoCurso == 'Aprobado' ? 'badge bg-success' : 
+                                                matricula.estadoCurso == 'Reprobado' ? 'badge bg-danger' :
+                                                matricula.estadoCurso == 'Retirado' ? 'badge bg-warning' : 
+                                                'badge bg-primary'}">
+                                </span>
+                            </td>
+                            <td>
+                                <span th:if="${matricula.notaFinal != null}" 
+                                      th:text="${#numbers.formatDecimal(matricula.notaFinal, 1, 1)}"></span>
+                                <span th:unless="${matricula.notaFinal != null}">-</span>
+                            </td>
+                            <td>
+                                <div th:if="${matricula.estadoCurso == 'Activo'}">
+                                    <button onclick="calificarCurso(this)" 
+                                            th:data-id="${matricula.id}"
+                                            class="btn btn-primary btn-sm">
+                                        Calificar
+                                    </button>
+                                    <button onclick="retirarCurso(this)"
+                                            th:data-id="${matricula.id}"
+                                            class="btn btn-warning btn-sm">
+                                        Retirar
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <a th:href="@{/estudiantes}" class="btn btn-secondary">Volver</a>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout/layout :: footer"></footer>
+    
+    <script th:inline="javascript">
+    function calificarCurso(button) {
+        const id = button.getAttribute('data-id');
+        
+        Swal.fire({
+            title: 'Ingresar Nota Final',
+            input: 'number',
+            inputAttributes: {
+                min: 0,
+                max: 5,
+                step: 0.1
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Calificar',
+            cancelButtonText: 'Cancelar',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debe ingresar una nota';
+                }
+                const nota = parseFloat(value);
+                if (nota < 0 || nota > 5) {
+                    return 'La nota debe estar entre 0 y 5';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/matricula/calificar/${id}?notaFinal=${result.value}`, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire('¡Éxito!', 'Nota registrada correctamente', 'success')
+                            .then(() => location.reload());
+                    } else {
+                        Swal.fire('Error', 'No se pudo registrar la nota', 'error');
+                    }
+                });
+            }
+        });
+    }
+
+    function retirarCurso(button) {
+        const id = button.getAttribute('data-id');
+        
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: "¿Desea retirar este curso?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, retirar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/matricula/retirar/${id}`, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire('¡Éxito!', 'Curso retirado correctamente', 'success')
+                            .then(() => location.reload());
+                    } else {
+                        Swal.fire('Error', 'No se pudo retirar el curso', 'error');
+                    }
+                });
+            }
+        });
+    }
+    </script>
+</body>
+</html>

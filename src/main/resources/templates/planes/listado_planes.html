@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+    <header th:replace="~{layout/layout :: header}"></header>
+
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${titulo}"></h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <a th:href="@{/planestudio/form}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Nuevo Plan de estudio
+                    </a>
+                </div>
+                <table class="table table-striped" th:if="${not #lists.isEmpty(planes)}">
+                    <tr>
+                        <th>ID</th>
+                        <th>Descripción</th>
+                        <th>Año de vigencia</th>
+                        <th>Acciones</th>
+                    </tr>
+                    <tr th:each="plan : ${planes}">
+                        <td th:text="${plan.id}"></td>
+                        <td th:text="${plan.descripcion}"></td>
+                        <td th:text="${plan.anioVigencia}"></td>
+                        <td>
+                            <a th:href="@{/planestudio/consultar/{id}(id=${plan.id})}" class="btn btn-info btn-sm">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a th:href="@{/planestudio/form/{id}(id=${plan.id})}" class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a th:href="@{/planestudio/eliminar/{id}(id=${plan.id})}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Estás seguro de eliminar este curso?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            
+                        </td>
+                    </tr>
+                </table>
+                <div class="alert alert-info" th:if="${#lists.isEmpty(planes)}">
+                    No hay Planes de estudio registrados aún
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+
+
+</body>
+
+</html>
